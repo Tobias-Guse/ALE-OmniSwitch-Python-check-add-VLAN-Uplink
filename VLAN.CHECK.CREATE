@@ -7,7 +7,7 @@ import logging
 # OmniSwitch add Credentials
 HOST = "10.10.255.9"
 USERNAME = "admin"
-PASSWORD = "Letacla1#"
+PASSWORD = "password"
 PORT = "1/1/4"
 VLAN_DATA = [
     {"id": 666, "name": "VLAN_666"},
@@ -82,6 +82,7 @@ if __name__ == "__main__":
     else:
         print("OK Es gab Fehler bei der Erstellung und Konfiguration der VLANs.")
         logging.error("OK Es gab Fehler bei der Erstellung und Konfiguration der VLANs.")
+
 
 
 # Script ausführen C:\Users\gtobias\Desktop\Python>python .\VLAN.CHECK.CREATE
