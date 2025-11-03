@@ -78,7 +78,7 @@ if __name__ == "__main__":
     # Statusmeldung
     if all_successful:
         print("OK Alle VLANs wurden erfolgreich erstellt und konfiguriert.")
-        logging.info("✅ Alle VLANs wurden erfolgreich erstellt und konfiguriert.")
+        logging.info("Alle VLANs wurden erfolgreich erstellt und konfiguriert.")
     else:
         print("OK Es gab Fehler bei der Erstellung und Konfiguration der VLANs.")
         logging.error("OK Es gab Fehler bei der Erstellung und Konfiguration der VLANs.")
@@ -86,4 +86,5 @@ if __name__ == "__main__":
 
 
 # Script ausführen C:\Users\gtobias\Desktop\Python>python .\VLAN.CHECK.CREATE
+
 
