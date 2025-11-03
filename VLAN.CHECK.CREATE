@@ -5,7 +5,7 @@ import time
 import logging
 
 # OmniSwitch add Credentials
-HOST = "10.10.255.9"
+HOST = "Switch-IP"
 USERNAME = "admin"
 PASSWORD = "password"
 PORT = "1/1/4"
@@ -86,3 +86,4 @@ if __name__ == "__main__":
 
 
 # Script ausführen C:\Users\gtobias\Desktop\Python>python .\VLAN.CHECK.CREATE
+
