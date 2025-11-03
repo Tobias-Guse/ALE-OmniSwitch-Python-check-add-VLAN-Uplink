@@ -1,0 +1,87 @@
+print("Script check & add VLAN + Uplink , Logging vlan_creation.log") 
+
+import paramiko
+import time
+import logging
+
+# OmniSwitch add Credentials
+HOST = "10.10.255.9"
+USERNAME = "admin"
+PASSWORD = "Letacla1#"
+PORT = "1/1/4"
+VLAN_DATA = [
+    {"id": 666, "name": "VLAN_666"},
+    {"id": 777, "name": "VLAN_777"}
+]
+
+# Logging
+logging.basicConfig(
+    filename="vlan_creation.log",
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    filemode='w'
+)
+
+def create_vlan_and_add_port(vlan_id, vlan_name):
+    try:
+        # SSH-Verbindung aufbauen
+        client = paramiko.SSHClient()
+        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        client.connect(HOST, username=USERNAME, password=PASSWORD)
+
+        # Interaktive Shell starten
+        shell = client.invoke_shell()
+        time.sleep(1)
+
+        # VLAN erstellen
+        print(f"Erstelle VLAN {vlan_id} mit Name {vlan_name}...")
+        logging.info(f"Erstelle VLAN {vlan_id} mit Name {vlan_name}...")
+        shell.send(f"vlan {vlan_id} name {vlan_name}\n")
+        time.sleep(1)
+
+        # Mitglieder prüfen und Port hinzufügen, wenn nötig
+        shell.send(f"show vlan {vlan_id} members\n")
+        time.sleep(2)
+        output = shell.recv(5000).decode("utf-8")
+
+        if PORT not in output:
+            print(f"Port {PORT} ist nicht Mitglied von VLAN {vlan_id}. VLAN zum Port hinzufügen...")
+            logging.info(f"Port {PORT} ist nicht Mitglied von VLAN {vlan_id}. VLAN zum Port hinzufügen...")
+            shell.send(f"vlan {vlan_id} members port {PORT} tagged\n")
+            time.sleep(2)
+            shell.send(f"show vlan {vlan_id} members\n")
+            time.sleep(2)
+            output = shell.recv(5000).decode("utf-8")
+            print(f"Aktualisierte Mitglieder von VLAN {vlan_id}:")
+            print(output)
+            logging.info(f"Aktualisierte Mitglieder von VLAN {vlan_id}:\n{output}")
+        else:
+            print(f"Port {PORT} ist bereits Mitglied von VLAN {vlan_id}.")
+            logging.info(f"Port {PORT} ist bereits Mitglied von VLAN {vlan_id}.")
+
+        client.close()
+        return True
+    except Exception as e:
+        print(f"!X! Fehler: {e}")
+        logging.error(f"!X! Fehler: {e}")
+        return False
+
+# VLANs erstellen und Ports hinzufügen
+if __name__ == "__main__":
+    all_successful = True
+    for vlan in VLAN_DATA:
+        success = create_vlan_and_add_port(vlan["id"], vlan["name"])
+        if not success:
+            all_successful = False
+        logging.info(f"OK VLAN {vlan['id']} ({vlan['name']}) wurde erfolgreich auf {HOST} erstellt." if success else f"❌ Fehler beim Erstellen von VLAN {vlan['id']} ({vlan['name']}).")
+
+    # Statusmeldung
+    if all_successful:
+        print("OK Alle VLANs wurden erfolgreich erstellt und konfiguriert.")
+        logging.info("✅ Alle VLANs wurden erfolgreich erstellt und konfiguriert.")
+    else:
+        print("OK Es gab Fehler bei der Erstellung und Konfiguration der VLANs.")
+        logging.error("OK Es gab Fehler bei der Erstellung und Konfiguration der VLANs.")
+
+
+# Script ausführen C:\Users\gtobias\Desktop\Python>python .\VLAN.CHECK.CREATE
