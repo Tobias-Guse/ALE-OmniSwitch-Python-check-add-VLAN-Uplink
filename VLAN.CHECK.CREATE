@@ -4,11 +4,11 @@ import paramiko
 import time
 import logging
 
-# OmniSwitch add Credentials
+# OmniSwitch add IP & Credentials & VLAN & Uplink Port
 HOST = "Switch-IP"
 USERNAME = "admin"
 PASSWORD = "password"
-PORT = "1/1/4"
+PORT = "1/1/48"
 VLAN_DATA = [
     {"id": 666, "name": "VLAN_666"},
     {"id": 777, "name": "VLAN_777"}
@@ -86,5 +86,6 @@ if __name__ == "__main__":
 
 
 # Script ausführen C:\Users\gtobias\Desktop\Python>python .\VLAN.CHECK.CREATE
+
 
 
